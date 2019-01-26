@@ -5,8 +5,8 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
-static int borderpx = 2;
+static char *font = "Inconsolata Nerd Font:pixelsize=20:antialias=true:autohint=true";
+static int borderpx = 5;
 
 /*
  * What program is execed by st depends of these precedence rules:
@@ -42,14 +42,15 @@ static unsigned int tripleclicktimeout = 600;
 int allowaltscreen = 1;
 
 /* frames per second st should at maximum draw to the screen */
-static unsigned int xfps = 120;
-static unsigned int actionfps = 30;
+static unsigned int xfps = 144;
+static unsigned int actionfps = 144;
 
 /*
  * blinking timeout (set to 0 to disable blinking) for the terminal blinking
  * attribute.
  */
-static unsigned int blinktimeout = 800;
+// static unsigned int blinktimeout = 800;
+static unsigned int blinktimeout = 0;
 
 /*
  * thickness of underline and bar cursors
@@ -80,68 +81,52 @@ char *termname = "st-256color";
  *
  *	stty tabs
  */
-unsigned int tabspaces = 8;
-
-/*
- * = Nord Theme =
- *
- * I also included the original palete as defined by the project
- * in case you want to switch up or modify the color arrangement.
- */
-#define nord0 "#2E3440"
-#define nord1 "#3B4252"
-#define nord2 "#434C5E"
-#define nord3 "#4C566A"
-#define nord4 "#D8DEE9"
-#define nord5 "#E5E9F0"
-#define nord6 "#ECEFF4"
-#define nord7 "#8FBCBB"
-#define nord8 "#88C0D0"
-#define nord9 "#81A1C1"
-#define nord10 "#5E81AC"
-#define nord11 "#BF616A"
-#define nord12 "#D08770"
-#define nord13 "#EBCB8B"
-#define nord14 "#A3BE8C"
-#define nord15 "#B48EAD"
+unsigned int tabspaces = 4;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
-	/* 8 normal colors */
-	nord1,
-	nord11,
-	nord14,
-	nord13,
-	nord9,
-	nord15,
-	nord8,
-	nord5,
 
-	/* 8 bright colors */
-	nord3,
-	nord11,
-	nord14,
-	nord13,
-	nord9,
-	nord15,
-	nord7,
-	nord6,
+	  /* 8 normal colors */
+	  [0] = "#3b4252", /* black   */
+	  [1] = "#bf616a", /* red     */
+	  [2] = "#a3be8c", /* green   */
+	  [3] = "#ebcb8b", /* yellow  */
+	  [4] = "#81a1c1", /* blue    */
+	  [5] = "#b48ead", /* magenta */
+	  [6] = "#88c0d0", /* cyan    */
+	  [7] = "#e5e9f0", /* white   */
 
-	[255] = 0,
+	  /* 8 bright colors */
+	  [8]  = "#4c566a", /* black   */
+	  [9]  = "#bf616a", /* red     */
+	  [10] = "#a3be8c", /* green   */
+	  [11] = "#ebcb8b", /* yellow  */
+	  [12] = "#81a1c1", /* blue    */
+	  [13] = "#b48ead", /* magenta */
+	  [14] = "#8fbcbb", /* cyan    */
+	  [15] = "#eceff4", /* white   */
 
-	/* more colors can be added after 255 to use with DefaultXX */
-	nord4,
-	nord8,
+	  /* special colors */
+	  [256] = "#2e3440", /* background */
+	  [257] = "#d8dee9", /* foreground */
 };
 
 /*
- * Default colors (colorname index)
- * foreground, background, cursor, reverse cursor
- */
-unsigned int defaultfg = 7;
-unsigned int defaultbg = 0;
-static unsigned int defaultcs = 256;
+ *  * Default colors (colorname index)
+ *   * foreground, background, cursor
+ *    */
+unsigned int defaultfg = 257;
+unsigned int defaultbg = 256;
+static unsigned int defaultcs = 257;
 static unsigned int defaultrcs = 257;
+/*
+ *  * Colors used, when the specific fg == defaultfg. So in reverse mode this
+ *   * will reverse too. Another logic would only make the simple feature too
+ *    * complex.
+ *     */
+static unsigned int defaultitalic = 7;
+static unsigned int defaultunderline = 7;
+
 
 /*
  * Default shape of cursor
@@ -178,18 +163,18 @@ static unsigned int defaultattr = 11;
  */
 static MouseShortcut mshortcuts[] = {
 	/* button               mask            string */
-	{ Button4,              XK_NO_MOD,      "\031" },
-	{ Button5,              XK_NO_MOD,      "\005" },
+	{ Button4,              XK_NO_MOD,     "\031" },
+	{ Button5,              XK_NO_MOD,     "\005" },
 };
 
 MouseKey mkeys[] = {
-	/* button               mask            function        argument */
-	{ Button4,              ShiftMask,      kscrollup,      {.i =  1} },
-	{ Button5,              ShiftMask,      kscrolldown,    {.i =  1} },
+    /* button               mask            function        argument */
+    { Button4,              ShiftMask,      kscrollup,      {.i =  1} },
+    { Button5,              ShiftMask,      kscrolldown,    {.i =  1} },
 };
 
 /* Internal keyboard shortcuts. */
-#define MODKEY Mod1Mask
+#define MODKEY Mod4Mask
 #define TERMMOD (ControlMask|ShiftMask)
 
 static Shortcut shortcuts[] = {
@@ -204,7 +189,6 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
 	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
-	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
 };
 
